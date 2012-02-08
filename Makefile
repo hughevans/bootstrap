@@ -38,6 +38,17 @@ bootstrap:
 	cat js/bootstrap-transition.js js/bootstrap-alert.js js/bootstrap-button.js js/bootstrap-carousel.js js/bootstrap-collapse.js js/bootstrap-dropdown.js js/bootstrap-modal.js js/bootstrap-tooltip.js js/bootstrap-popover.js js/bootstrap-scrollspy.js js/bootstrap-tab.js js/bootstrap-typeahead.js > bootstrap/js/bootstrap.js
 	uglifyjs -nc bootstrap/js/bootstrap.js > bootstrap/js/bootstrap.min.js
 
+
+#
+# BUILD BOOTSTRAP TO CSS_DIR & JS_DIR
+# lessc & uglifyjs are required
+#
+
+bootstrap-to-dir:
+	lessc --compress ${BOOTSTRAP_LESS} > ${CSS_DIR}application.min.css
+	cat js/bootstrap-transition.js js/bootstrap-alert.js js/bootstrap-button.js js/bootstrap-carousel.js js/bootstrap-collapse.js js/bootstrap-dropdown.js js/bootstrap-modal.js js/bootstrap-tooltip.js js/bootstrap-popover.js js/bootstrap-scrollspy.js js/bootstrap-tab.js js/bootstrap-typeahead.js > bootstrap/js/bootstrap.js
+	uglifyjs -nc bootstrap/js/bootstrap.js > ${JS_DIR}application.min.js
+
 #
 # MAKE FOR GH-PAGES 4 FAT & MDO ONLY (O_O  )
 #
@@ -55,5 +66,12 @@ watch:
 	echo "Watching less files..."; \
 	watchr -e "watch('less/.*\.less') { system 'make' }"
 
+#
+# WATCH LESS FILES AND OUTPUT TO CHOSEN DIR
+#
+
+watch-to-dir:
+	echo "Watching less files..."; \
+	watchr -e "watch('less/.*\.less') { system 'make bootstrap-to-dir' }"
 
 .PHONY: dist docs watch gh-pages
